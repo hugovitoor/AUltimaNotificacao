@@ -1,4 +1,4 @@
-const SPREADSHEET_ID = "COLE_O_ID_DA_SUA_PLANILHA";
+const SPREADSHEET_ID = "1t42qOqcZ-d-0OthMLt5kNFtPw_XALTQ4pCo_SySe4nM";
 const SHEET_NAME = "Fichas";
 
 const HEADERS = [
