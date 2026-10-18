@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Crie seu personagem para A Última Notificação.">
+  <title>A Última Notificação — Criação de personagem</title>
+  <style>
+    /* Para usar The Seasons, coloque o arquivo da fonte em assets/TheSeasons.woff2.
+       Se você tiver outro formato, ajuste o src abaixo. */
+    @font-face {
+      font-family: "The Seasons";
+      src: url("assets/TheSeasons.woff2") format("woff2");
+      font-display: swap;
+    }
+
+    :root {
+      --black: #000;
+      --white: #f6f3f0;
+      --gold: #f0d875;
+      --gold-soft: #d8c57e;
+      --red: #b00000;
+      --purple: #d8baff;
+      --muted: #c8c0c8;
+      --line: #e7e3e6;
+      --content: 760px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: "The Seasons", Georgia, serif;
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    .page {
+      width: min(100% - 28px, var(--content));
+      margin: 0 auto;
+      padding: 26px 0 52px;
+    }
+
+    .symbols-top {
+      display: block;
+      width: min(100%, 690px);
+      height: auto;
+      margin: 0 auto 26px;
+      object-fit: contain;
+    }
+
+    .intro {
+      color: var(--purple);
+      margin: 0 auto 22px;
+      max-width: 720px;
+      line-height: 1.55;
+      font-size: clamp(14px, 2.3vw, 18px);
+    }
+
+    .symbols-divider {
+      display: block;
+      width: 100%;
+      max-width: 690px;
+      margin: 12px auto 20px;
+    }
+
+    .section-kicker {
+      margin: 20px 0 12px;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-shadow: 0 0 7px #e9d26c88;
+      font-size: 14px;
+    }
+
+    .circle {
+      display: block;
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin: 0 auto 10px;
+    }
+
+    .prompt {
+      display: block;
+      text-align: center;
+      color: var(--gold);
+      text-shadow: 0 0 6px #e9d26c77;
+      margin: 10px 0 4px;
+      font-size: clamp(14px, 2.2vw, 17px);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      display: block;
+      width: 100%;
+      color: var(--white);
+      background: #000;
+      border: 1.6px solid var(--line);
+      border-radius: 999px;
+      min-height: 44px;
+      padding: 10px 16px;
+      font: inherit;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    textarea {
+      border-radius: 18px;
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px #f0d87530;
+    }
+
+    .field { margin-bottom: 9px; }
+    .small-note {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin: 8px 0 18px;
+    }
+
+    .attribute-heading {
+      text-align: center;
+      color: var(--gold);
+      text-shadow: 0 0 7px #e9d26c66;
+      text-transform: uppercase;
+      margin: 18px 0 12px;
+      font-size: 14px;
+    }
+
+    .attribute-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 16px 12px;
+      align-items: end;
+      justify-items: center;
+      width: min(100%, 540px);
+      margin: 0 auto;
+    }
+
+    .attribute {
+      grid-column: span 2;
+      text-align: center;
+      min-width: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .attribute:nth-child(4) { grid-column: 2 / span 2; }
+    .attribute:nth-child(5) { grid-column: 4 / span 2; }
+
+    .attribute label {
+      display: block;
+      color: var(--gold);
+      text-shadow: 0 0 7px #e9d26c88;
+      font-size: clamp(15px, 3.2vw, 22px);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .attribute input {
+      width: 74px;
+      height: 74px;
+      min-height: 74px;
+      border-radius: 25px;
+      padding: 4px;
+      text-align: center;
+      font-size: 25px;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+    .attribute input::-webkit-inner-spin-button,
+    .attribute input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .points-status {
+      text-align: center;
+      color: var(--gold);
+      margin: 14px 0 5px;
+      font-size: 14px;
+    }
+    .points-status.error { color: #ff6868; }
+    .points-status.ok { color: #d7d0a2; }
+
+    .section-icon {
+      display: block;
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      margin: 8px auto 16px;
+    }
+
+    .skill-intro {
+      color: var(--muted);
+      text-align: center;
+      margin: 0 auto 14px;
+      max-width: 620px;
+      font-size: 14px;
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 24px;
+      margin: 0 auto 24px;
+      width: min(100%, 590px);
+      justify-content: center;
+      align-content: start;
+    }
+
+    .skill {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: #e8e0dc;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 0;
+    }
+
+    .skill input {
+      margin: 3px 0 0;
+      accent-color: var(--gold);
+      flex: 0 0 auto;
+      width: 14px;
+      height: 14px;
+    }
+    .skill:has(input:disabled) { opacity: .42; cursor: not-allowed; }
+
+    .red-question {
+      color: var(--red);
+      text-align: center;
+      margin: 22px auto 8px;
+      max-width: 700px;
+      line-height: 1.35;
+    }
+
+    .quote {
+      color: #b40000;
+      text-align: center;
+      max-width: 680px;
+      margin: 22px auto 18px;
+      line-height: 1.45;
+    }
+
+    .earth-symbol {
+      display: block;
+      width: 66px;
+      height: 66px;
+      object-fit: contain;
+      margin: 14px auto;
+    }
+
+    .secret-title {
+      color: #b00000;
+      text-align: center;
+      font-size: clamp(22px, 4vw, 30px);
+      text-shadow: 0 0 8px #a0000040;
+      margin: 24px 0 10px;
+      text-transform: uppercase;
+    }
+
+    .submit-area { text-align: center; margin-top: 24px; }
+    button {
+      color: #000;
+      background: var(--gold);
+      border: 1px solid var(--gold);
+      border-radius: 999px;
+      padding: 13px 26px;
+      font: inherit;
+      cursor: pointer;
+      max-width: 100%;
+      transition: opacity .15s, transform .15s;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .55; cursor: wait; transform: none; }
+
+    #status {
+      min-height: 24px;
+      text-align: center;
+      margin: 14px 0;
+      color: var(--gold);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .honeypot {
+      position: absolute !important;
+      left: -10000px !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+    }
+
+    footer {
+      text-align: center;
+      color: #716b73;
+      font-size: 11px;
+      margin-top: 35px;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        width: min(100% - 28px, var(--content));
+        padding-top: 18px;
+      }
+
+      .intro {
+        font-size: clamp(13px, 3.5vw, 16px);
+        line-height: 1.55;
+      }
+
+      .attribute-grid {
+        width: min(100%, 390px);
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 14px 4px;
+      }
+
+      .attribute label {
+        font-size: clamp(12px, 3.1vw, 17px);
+        overflow-wrap: anywhere;
+      }
+
+      .attribute input {
+        width: clamp(54px, 17vw, 70px);
+        height: clamp(60px, 18vw, 72px);
+        min-height: clamp(60px, 18vw, 72px);
+        border-radius: 22px;
+        font-size: 22px;
+      }
+
+      .skills {
+        width: min(100%, 440px);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px 12px;
+      }
+
+      .skill {
+        font-size: clamp(12px, 3.1vw, 14px);
+        line-height: 1.35;
+      }
+
+      .skill input {
+        width: 14px;
+        height: 14px;
+      }
+
+      .symbols-top {
+        margin-bottom: 20px;
+      }
+
+      .circle {
+        width: clamp(96px, 27vw, 120px);
+        height: clamp(96px, 27vw, 120px);
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .page { width: calc(100% - 20px); }
+
+      .attribute-grid {
+        width: 100%;
+        gap: 12px 0;
+      }
+
+      .attribute label {
+        font-size: 11px;
+      }
+
+      .attribute input {
+        width: 52px;
+        height: 58px;
+        min-height: 58px;
+      }
+
+      .skills {
+        gap: 8px 7px;
+      }
+
+      .skill {
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      .skill input {
+        width: 13px;
+        height: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <img class="symbols-top" src="assets/simbolos-topo.png" alt="" aria-hidden="true">
+
+    <p class="intro">
+      Conheça o seu eu, hoje, você responderá perguntas que não foram feitas para você.<br>
+      Isso trará um alguém que será a pessoa da qual você dará a sua vida para interpretar.<br>
+      Ninguém além de você.<br>
+      Com isso, ela poderá suar um corpo, sentir sentimentos.<br>
+      Os que virem sua dedicação, vão aplaudir o seu esforço. Seja bem-vindo(a).
+    </p>
+
+    <img class="symbols-divider" src="assets/simbolos-divisor.png" alt="" aria-hidden="true">
+
+    <p class="section-kicker">Pergunte-se.</p>
+    <img class="circle" src="assets/circulo-arcano.png" alt="" aria-hidden="true">
+
+    <form id="characterForm">
+      <div class="field">
+        <label class="prompt" for="personagem">Como se chama seu novo eu?</label>
+        <input id="personagem" name="personagem" type="text" maxlength="100" required>
+      </div>
+
+      <div class="field">
+        <label class="prompt" for="idade">Quantos anos tem?</label>
+        <input id="idade" name="idade" type="number" min="1" max="500" required>
+      </div>
+
+      <div class="field">
+        <label class="prompt" for="aparencia">Como é a sua aparência?</label>
+        <input id="aparencia" name="aparencia" type="text" maxlength="500" required>
+      </div>
+
+      <div class="field">
+        <label class="prompt" for="personalidade">Como é a sua personalidade?</label>
+        <input id="personalidade" name="personalidade" type="text" maxlength="500" required>
+      </div>
+
+      <p class="attribute-heading">Você tem 9 pontos para distribuir nos 5 atributos abaixo:</p>
+
+      <div class="attribute-grid">
+        <div class="attribute">
+          <label for="intelecto">Intelecto</label>
+          <input id="intelecto" name="intelecto" type="number" min="0" max="3" value="0" required>
+        </div>
+        <div class="attribute">
+          <label for="presenca">Presença</label>
+          <input id="presenca" name="presenca" type="number" min="0" max="3" value="0" required>
+        </div>
+        <div class="attribute">
+          <label for="agilidade">Agilidade</label>
+          <input id="agilidade" name="agilidade" type="number" min="0" max="3" value="0" required>
+        </div>
+        <div class="attribute">
+          <label for="vigor">Vigor</label>
+          <input id="vigor" name="vigor" type="number" min="0" max="3" value="0" required>
+        </div>
+        <div class="attribute">
+          <label for="forca">Força</label>
+          <input id="forca" name="forca" type="number" min="0" max="3" value="0" required>
+        </div>
+      </div>
+
+      <p id="pointsStatus" class="points-status" aria-live="polite">Pontos distribuídos: 0/9</p>
+
+      <p class="section-kicker">Aprimore-se.</p>
+      <img class="section-icon" src="assets/selo.png" alt="" aria-hidden="true">
+      <p class="skill-intro" id="skillLimit">
+        Você pode melhorar X habilidades; selecione as que têm a ver com o seu eu.
+      </p>
+
+      <div class="skills" id="skills">
+        <label class="skill"><input type="checkbox" name="habilidades" value="Acrobacia">Acrobacia</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Investigação">Investigação</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Adestramento">Adestramento</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Luta">Luta</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Artes">Artes</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Medicina">Medicina</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Atletismo">Atletismo</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Ocultismo">Ocultismo</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Atualidades">Atualidades</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Percepção">Percepção</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Ciências">Ciências</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Pilotagem">Pilotagem</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Crime">Crime</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Pontaria">Pontaria</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Diplomacia">Diplomacia</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Profissão">Profissão</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Enganação">Enganação</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Reflexos">Reflexos</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Fortitude">Fortitude</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Religião">Religião</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Iniciativa">Iniciativa</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Sobrevivência">Sobrevivência</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Intimidação">Intimidação</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Tática">Tática</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Intuição">Intuição</label>
+        <label class="skill"><input type="checkbox" name="habilidades" value="Tecnologia">Tecnologia</label>
+      </div>
+
+      <div class="field">
+        <label class="prompt" for="inventario">Você pode carregar muitas coisas, mas o que você tem realmente?</label>
+        <textarea id="inventario" name="inventario" maxlength="3000" required></textarea>
+      </div>
+
+      <p class="quote">
+        “Na categorizada vila do Vale Seco, batizada pela nascente que há muito deixou de correr e faminta-se um lugar que perdeu de encher, vivem trinta e poucas pessoas, mas muitos segredos. O sinal é fraco, mas a vila é conhecida no estado por ter uma água abençoada por Nossa Senhora da Rocha, que afasta todos que bebem das enfermidades. Em um lugar onde a cura é sinônimo de fé, algo sombrio começa a se mover por trás das telas.”
+      </p>
+
+      <img class="earth-symbol" src="assets/simbolo-terra.png" alt="" aria-hidden="true">
+
+      <div class="field">
+        <label class="red-question" for="motivacao">Como e por que você foi para a vila, e se já morava, o que você frequentemente faz nela?</label>
+        <textarea id="motivacao" name="motivacao" maxlength="3000" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="red-question" for="objetivo">O que você lutaria para não perder? Qual prática, rotina, objeto ou memória você daria de tudo para continuar tendo?</label>
+        <textarea id="objetivo" name="objetivo" maxlength="3000" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="red-question" for="fardo">Qual é o seu fardo? O que você carrega todos os dias calado, mas nos seus pensamentos é algo que grita constantemente?</label>
+        <textarea id="fardo" name="fardo" maxlength="3000" required></textarea>
+      </div>
+
+      <div class="field">
+        <label class="red-question" for="sacrificio">Qual foi o seu maior sacrifício? O que você recebeu em troca e a qual custo? Você gostaria de reverter a sua situação?</label>
+        <textarea id="sacrificio" name="sacrificio" maxlength="3000" required></textarea>
+      </div>
+
+      <h2 class="secret-title">Qual é o seu maior segredo?</h2>
+      <div class="field">
+        <textarea id="segredo" name="segredo" maxlength="3000" aria-label="Seu maior segredo" required></textarea>
+      </div>
+
+      <!-- Campo honeypot anti-spam: jogadores reais devem deixá-lo vazio. -->
+      <div class="honeypot" aria-hidden="true">
+        <label for="website">Deixe vazio</label>
+        <input id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="submit-area">
+        <button id="submitButton" type="submit">Enviar ficha para o mestre</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <footer>J. F. e seus quatro f.</footer>
+  </main>
+
+  <script>
+    // Cole aqui a URL da implantação do Apps Script terminada em /exec.
+    const API_URL = "https://script.google.com/macros/s/AKfycbx-AxER2VOeytov7TRn3fbm4Z0Qdlh_0qBEZLoj4T6CAzBo4V1M-V6LrJHlYvBX0paBjQ/exec";
+
+    const form = document.getElementById("characterForm");
+    const button = document.getElementById("submitButton");
+    const status = document.getElementById("status");
+    const attributeIds = ["intelecto", "presenca", "agilidade", "vigor", "forca"];
+    const attributeInputs = attributeIds.map(id => document.getElementById(id));
+    const pointsStatus = document.getElementById("pointsStatus");
+    const skillLimit = document.getElementById("skillLimit");
+    const skillInputs = [...document.querySelectorAll('input[name="habilidades"]')];
+
+    function updateAttributes(changedInput = null) {
+      if (changedInput) {
+        let value = Number(changedInput.value);
+        if (changedInput.value === "" || !Number.isFinite(value)) value = 0;
+        value = Math.max(0, Math.min(3, Math.trunc(value)));
+        changedInput.value = value;
+
+        let total = attributeInputs.reduce((sum, input) => sum + Number(input.value || 0), 0);
+        if (total > 9) {
+          changedInput.value = Math.max(0, Number(changedInput.value) - (total - 9));
+        }
+      }
+
+      const values = attributeInputs.map(input => Number(input.value));
+      const total = values.reduce((sum, value) => sum + value, 0);
+      const intellect = Number(document.getElementById("intelecto").value);
+      pointsStatus.textContent = `Pontos distribuídos: ${total}/9`;
+      pointsStatus.className = "points-status " + (total === 9 ? "ok" : total > 9 ? "error" : "");
+      pointsStatus.textContent += total === 9 ? " — distribuição completa." : ` — faltam ${9 - total} ponto(s).`;
+
+      const limit = intellect + 1;
+      const selected = skillInputs.filter(input => input.checked).length;
+      skillLimit.textContent = `Você pode melhorar ${limit} habilidade(s). Selecionadas: ${selected}/${limit}.`;
+
+      skillInputs.forEach(input => {
+        input.disabled = !input.checked && selected >= limit;
+      });
+    }
+
+    attributeInputs.forEach(input => {
+      input.addEventListener("input", () => updateAttributes(input));
+      input.addEventListener("change", () => updateAttributes(input));
+    });
+    skillInputs.forEach(input => input.addEventListener("change", () => updateAttributes()));
+    updateAttributes();
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      status.textContent = "";
+
+      if (!form.reportValidity()) return;
+
+      const values = attributeInputs.map(input => Number(input.value));
+      if (values.some(value => !Number.isInteger(value) || value < 0 || value > 3) ||
+          values.reduce((sum, value) => sum + value, 0) !== 9) {
+        status.textContent = "Distribua exatamente 9 pontos, com no máximo 3 em cada atributo.";
+        return;
+      }
+
+      const selectedSkills = skillInputs.filter(input => input.checked);
+      if (selectedSkills.length > Number(document.getElementById("intelecto").value) + 1) {
+        status.textContent = "Você selecionou mais habilidades do que seu Intelecto permite.";
+        return;
+      }
+
+      if (!API_URL.startsWith("https://script.google.com/")) {
+        status.textContent = "A API ainda não foi configurada. Avise o mestre.";
+        return;
+      }
+
+      button.disabled = true;
+      status.textContent = "Enviando sua ficha...";
+
+      try {
+        const data = new URLSearchParams();
+        for (const [key, value] of new FormData(form).entries()) {
+          if (key !== "habilidades") data.append(key, value);
+        }
+        selectedSkills.forEach(input => data.append("habilidades", input.value));
+
+        // no-cors envia a requisição, mas impede ler a resposta do Apps Script.
+        await fetch(API_URL, { method: "POST", mode: "no-cors", body: data });
+
+        status.textContent =
+          "Solicitação enviada ao Google. Como o navegador não consegue confirmar " +
+          "a gravação neste modo, aguarde a confirmação do mestre antes de enviar novamente.";
+      } catch (error) {
+        status.textContent = "Não foi possível enviar. Verifique a conexão e tente novamente.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
