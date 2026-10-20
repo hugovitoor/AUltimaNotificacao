@@ -288,6 +288,65 @@
     button:hover { transform: translateY(-1px); }
     button:disabled { opacity: .55; cursor: wait; transform: none; }
 
+    .submit-button {
+      color: #fff;
+      background: #a00000;
+      border: 1px solid #e21b1b;
+      box-shadow: 0 0 14px #a0000055;
+    }
+    .submit-button:hover { background: #c00000; }
+
+    .secret-initial {
+      display: inline;
+      border-radius: 2px;
+      text-shadow: 0 0 5px #ff2020aa, 0 0 10px #a0000088;
+      transition: text-shadow .35s, color .35s;
+    }
+    .secret-initial.lit {
+      color: #ff3b3b;
+      text-shadow: 0 0 7px #ff0000, 0 0 16px #ff0000, 0 0 26px #a00000;
+    }
+    #secretUnlock {
+      display: none;
+      text-align: center;
+      margin: 22px auto;
+      padding: 20px 16px;
+      border: 1px solid #5b0000;
+      max-width: 680px;
+    }
+    #secretUnlock.unlocked { display: block; }
+    #secretUnlock p { color: var(--white); }
+    #secretLinkWrap { display: none; margin: 38px auto 0; text-align: center; }
+    #secretLinkWrap.visible { display: block; }
+    #secretLink {
+      color: #fff;
+      background: #a00000;
+      display: inline-block;
+      padding: 12px 18px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      overflow-wrap: anywhere;
+      font-size: 18px;
+    }
+    body.high-contrast {
+      --black: #000;
+      --white: #fff;
+      --gold: #ffff00;
+      --gold-soft: #ffff00;
+      --purple: #00ffff;
+      --muted: #fff;
+      --line: #fff;
+      background: #000;
+      color: #fff;
+    }
+    body.high-contrast .intro,
+    body.high-contrast .quote,
+    body.high-contrast .red-question,
+    body.high-contrast .secret-title { color: #ffff00; }
+    body.high-contrast #secretUnlock { border: 2px solid #ffff00; }
+    body.high-contrast #secretLink { background: #ffff00; color: #000; border-color: #fff; font-weight: bold; }
+    #musicFrame { position: fixed; width: 1px; height: 1px; left: -10px; bottom: -10px; border: 0; }
+
     #status {
       min-height: 24px;
       text-align: center;
@@ -414,13 +473,17 @@
   <main class="page">
     <img class="symbols-top" src="assets/simbolos-topo.png" alt="" aria-hidden="true">
 
-    <p class="intro">
-      Conheça o seu eu, hoje, você responderá perguntas que não foram feitas para você.<br>
-      Isso trará um alguém que será a pessoa da qual você dará a sua vida para interpretar.<br>
-      Ninguém além de você.<br>
-      Com isso, ela poderá suar um corpo, sentir sentimentos.<br>
-      Os que virem sua dedicação, vão aplaudir o seu esforço. Seja bem-vindo(a).
+    <p class="intro" id="introMessage">
+      <span class="secret-initial" data-letter="C">C</span>onheça o seu eu, hoje, você responderá perguntas que não foram feitas para você.<br>
+      <span class="secret-initial" data-letter="I">I</span>sso trará um alguém que será a pessoa da qual você dará a sua vida para interpretar.<br>
+      <span class="secret-initial" data-letter="N">N</span>inguém além de você.<br>
+      <span class="secret-initial" data-letter="C">C</span>om isso, ela poderá suar um corpo, sentir sentimentos.<br>
+      <span class="secret-initial" data-letter="O">O</span>s que virem sua dedicação, vão aplaudir o seu esforço. Seja bem-vindo(a).
     </p>
+
+    <section id="secretUnlock" aria-live="polite">
+      <p><strong>Algo foi liberado para você.</strong></p>
+    </section>
 
     <img class="symbols-divider" src="assets/simbolos-divisor.png" alt="" aria-hidden="true">
 
@@ -448,28 +511,28 @@
         <input id="personalidade" name="personalidade" type="text" maxlength="500" required>
       </div>
 
-      <p class="attribute-heading">Você tem 9 pontos para distribuir nos 5 atributos abaixo:</p>
+      <p class="attribute-heading">Você pode distribuir até 9 pontos nos 5 atributos abaixo (máximo de 3 por atributo):</p>
 
       <div class="attribute-grid">
         <div class="attribute">
           <label for="intelecto">Intelecto</label>
-          <input id="intelecto" name="intelecto" type="number" min="0" max="3" value="0" required>
+          <input id="intelecto" name="intelecto" type="number" min="0" max="3" value="0">
         </div>
         <div class="attribute">
           <label for="presenca">Presença</label>
-          <input id="presenca" name="presenca" type="number" min="0" max="3" value="0" required>
+          <input id="presenca" name="presenca" type="number" min="0" max="3" value="0">
         </div>
         <div class="attribute">
           <label for="agilidade">Agilidade</label>
-          <input id="agilidade" name="agilidade" type="number" min="0" max="3" value="0" required>
+          <input id="agilidade" name="agilidade" type="number" min="0" max="3" value="0">
         </div>
         <div class="attribute">
           <label for="vigor">Vigor</label>
-          <input id="vigor" name="vigor" type="number" min="0" max="3" value="0" required>
+          <input id="vigor" name="vigor" type="number" min="0" max="3" value="0">
         </div>
         <div class="attribute">
           <label for="forca">Força</label>
-          <input id="forca" name="forca" type="number" min="0" max="3" value="0" required>
+          <input id="forca" name="forca" type="number" min="0" max="3" value="0">
         </div>
       </div>
 
@@ -553,13 +616,19 @@
       </div>
 
       <div class="submit-area">
-        <button id="submitButton" type="submit">Enviar ficha para o mestre</button>
+        <button id="submitButton" class="submit-button" type="submit">Mande o seu eu.</button>
         <p id="status" role="status" aria-live="polite"></p>
       </div>
     </form>
 
     <footer>J. F. e seus quatro f.</footer>
+
+    <section id="secretLinkWrap" aria-label="Conteúdo revelado">
+      <a id="secretLink" href="https://canva.link/gsmlusrnqveu9x4" target="_blank" rel="noopener noreferrer">Acessar o que foi liberado</a>
+    </section>
   </main>
+
+  <iframe id="musicFrame" title="Música ambiente" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
   <script>
     // Cole aqui a URL da implantação do Apps Script terminada em /exec.
@@ -573,6 +642,51 @@
     const pointsStatus = document.getElementById("pointsStatus");
     const skillLimit = document.getElementById("skillLimit");
     const skillInputs = [...document.querySelectorAll('input[name="habilidades"]')];
+
+    // Segredo: clicar discretamente nas iniciais na ordem C-I-N-C-O.
+    let secretProgress = 0;
+    const secretCode = ["C", "I", "N", "C", "O"];
+    const secretInitials = [...document.querySelectorAll(".secret-initial")];
+    const secretUnlock = document.getElementById("secretUnlock");
+    const secretLinkWrap = document.getElementById("secretLinkWrap");
+
+    function clickSecretInitial(element) {
+      if (element.dataset.letter === secretCode[secretProgress]) {
+        secretProgress++;
+        element.classList.add("lit");
+        if (secretProgress === secretCode.length) {
+          secretUnlock.classList.add("unlocked");
+          secretUnlock.scrollIntoView({ behavior: "smooth", block: "center" });
+          secretProgress = 0;
+        }
+      } else {
+        secretProgress = element.dataset.letter === "C" ? 1 : 0;
+        secretInitials.forEach(item => item.classList.remove("lit"));
+        if (secretProgress) element.classList.add("lit");
+      }
+    }
+    secretInitials.forEach(element => {
+      element.addEventListener("click", () => clickSecretInitial(element));
+    });
+
+    // A pista não mostra um botão: descobrir Alt+C alterna a forma de enxergar.
+    document.addEventListener("keydown", event => {
+      if (event.altKey && event.key.toLowerCase() === "c") {
+        event.preventDefault();
+        const active = document.body.classList.toggle("high-contrast");
+        if (active && secretUnlock.classList.contains("unlocked")) {
+          secretLinkWrap.classList.add("visible");
+        } else {
+          secretLinkWrap.classList.remove("visible");
+        }
+      }
+    });
+
+    // Música ambiente automática em loop, sem controles visíveis.
+    // Navegadores podem bloquear autoplay com som até haver interação do usuário.
+    const musicFrame = document.getElementById("musicFrame");
+    const youtubeId = "m-kkRfQYofg";
+    musicFrame.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&loop=1&playlist=${youtubeId}&controls=0&playsinline=1`;
 
     function updateAttributes(changedInput = null) {
       if (changedInput) {
@@ -592,7 +706,7 @@
       const intellect = Number(document.getElementById("intelecto").value);
       pointsStatus.textContent = `Pontos distribuídos: ${total}/9`;
       pointsStatus.className = "points-status " + (total === 9 ? "ok" : total > 9 ? "error" : "");
-      pointsStatus.textContent += total === 9 ? " — distribuição completa." : ` — faltam ${9 - total} ponto(s).`;
+      pointsStatus.textContent += total === 9 ? " — limite atingido." : ` — você ainda pode distribuir ${9 - total} ponto(s), se quiser.`;
 
       const limit = intellect + 1;
       const selected = skillInputs.filter(input => input.checked).length;
@@ -618,8 +732,8 @@
 
       const values = attributeInputs.map(input => Number(input.value));
       if (values.some(value => !Number.isInteger(value) || value < 0 || value > 3) ||
-          values.reduce((sum, value) => sum + value, 0) !== 9) {
-        status.textContent = "Distribua exatamente 9 pontos, com no máximo 3 em cada atributo.";
+          values.reduce((sum, value) => sum + value, 0) > 9) {
+        status.textContent = "Use valores entre 0 e 3 e não ultrapasse 9 pontos no total.";
         return;
       }
 
@@ -647,9 +761,7 @@
         // no-cors envia a requisição, mas impede ler a resposta do Apps Script.
         await fetch(API_URL, { method: "POST", mode: "no-cors", body: data });
 
-        status.textContent =
-          "Solicitação enviada ao Google. Como o navegador não consegue confirmar " +
-          "a gravação neste modo, aguarde a confirmação do mestre antes de enviar novamente.";
+        status.textContent = "À meia-noite, mais uma raiz se fixa à árvore, obrigado.";
       } catch (error) {
         status.textContent = "Não foi possível enviar. Verifique a conexão e tente novamente.";
       } finally {
