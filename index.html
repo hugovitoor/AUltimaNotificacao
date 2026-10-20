@@ -320,13 +320,15 @@
     #secretLinkWrap.visible { display: block; }
     #secretLink {
       color: #fff;
-      background: #a00000;
-      display: inline-block;
-      padding: 12px 18px;
-      border: 2px solid #fff;
-      border-radius: 8px;
+      background: transparent;
+      display: inline;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
       overflow-wrap: anywhere;
-      font-size: 18px;
+      font-size: 14px;
+      opacity: 0.015;
+      text-decoration: none;
     }
     body.high-contrast {
       --black: #000;
@@ -369,6 +371,14 @@
       color: #716b73;
       font-size: 11px;
       margin-top: 35px;
+    }
+
+    @media (prefers-contrast: more), (forced-colors: active) {
+      #secretLink {
+        color: LinkText;
+        opacity: 1;
+        text-decoration: underline;
+      }
     }
 
     @media (max-width: 600px) {
@@ -624,7 +634,7 @@
     <footer>J. F. e seus quatro f.</footer>
 
     <section id="secretLinkWrap" aria-label="Conteúdo revelado">
-      <a id="secretLink" href="https://canva.link/gsmlusrnqveu9x4" target="_blank" rel="noopener noreferrer">Acessar o que foi liberado</a>
+      <a id="secretLink" href="https://canva.link/gsmlusrnqveu9x4" target="_blank" rel="noopener noreferrer">Um segredo foi liberado</a>
     </section>
   </main>
 
@@ -660,6 +670,7 @@
           secretUnlock.classList.add("unlocked");
           secretUnlock.scrollIntoView({ behavior: "smooth", block: "center" });
           secretProgress = 0;
+          updateDisplayMode();
         }
       } else {
         secretProgress = element.dataset.letter === "C" ? 1 : 0;
@@ -671,18 +682,30 @@
       element.addEventListener("click", () => clickSecretInitial(element));
     });
 
-    // A pista não mostra um botão: descobrir Alt+C alterna a forma de enxergar.
-    document.addEventListener("keydown", event => {
-      if (event.altKey && event.key.toLowerCase() === "c") {
-        event.preventDefault();
-        const active = document.body.classList.toggle("high-contrast");
-        if (active && secretUnlock.classList.contains("unlocked")) {
-          secretLinkWrap.classList.add("visible");
-        } else {
-          secretLinkWrap.classList.remove("visible");
-        }
+    
+    // O segredo reage às configurações de contraste do sistema.
+    // Não existe atalho nem botão de contraste no site.
+    const contrastPreference = window.matchMedia("(prefers-contrast: more)");
+    const forcedColors = window.matchMedia("(forced-colors: active)");
+
+    function updateDisplayMode() {
+      const active =
+        contrastPreference.matches || forcedColors.matches;
+
+      document.body.classList.toggle("high-contrast", active);
+
+      if (secretUnlock.classList.contains("unlocked")) {
+        secretLinkWrap.classList.add("visible");
+      } else {
+        secretLinkWrap.classList.remove("visible");
       }
-    });
+    }
+
+    contrastPreference.addEventListener("change", updateDisplayMode);
+    forcedColors.addEventListener("change", updateDisplayMode);
+
+    updateDisplayMode();
+
 
     // Música ambiente local, automática e em loop.
     const backgroundMusic = document.getElementById("backgroundMusic");
