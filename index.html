@@ -628,7 +628,9 @@
     </section>
   </main>
 
-  <iframe id="musicFrame" title="Música ambiente" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <audio id="backgroundMusic" autoplay loop preload="auto">
+  <source src="assets/audio.m4a" type="audio/mp4">
+</audio>
 
   <script>
     // Cole aqui a URL da implantação do Apps Script terminada em /exec.
@@ -682,11 +684,21 @@
       }
     });
 
-    // Música ambiente automática em loop, sem controles visíveis.
-    // Navegadores podem bloquear autoplay com som até haver interação do usuário.
-    const musicFrame = document.getElementById("musicFrame");
-    const youtubeId = "m-kkRfQYofg";
-    musicFrame.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&loop=1&playlist=${youtubeId}&controls=0&playsinline=1`;
+    // Música ambiente local, automática e em loop.
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    backgroundMusic.volume = 0.35;
+
+    backgroundMusic.play().catch(() => {
+      // O navegador pode exigir uma interação antes de liberar o áudio.
+      const startMusic = () => {
+        backgroundMusic.play().catch(() => {});
+        document.removeEventListener("click", startMusic);
+        document.removeEventListener("keydown", startMusic);
+      };
+
+      document.addEventListener("click", startMusic);
+      document.addEventListener("keydown", startMusic);
+    });
 
     function updateAttributes(changedInput = null) {
       if (changedInput) {
