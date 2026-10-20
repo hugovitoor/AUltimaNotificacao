@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
-  <meta name="description" content="Crie seu personagem para A Última Notificação.">
-  <title>A Última Notificação — Criação de personagem</title>
+  <meta name="description" content="Nem os mortos guardam segredos.">
+  <title>A Última Notificação</title>
   <style>
     /* Para usar The Seasons, coloque o arquivo da fonte em assets/TheSeasons.woff2.
        Se você tiver outro formato, ajuste o src abaixo. */
@@ -316,23 +316,36 @@
     }
     #secretUnlock.unlocked { display: block; }
     #secretUnlock p { color: var(--white); }
-    #secretLinkWrap { display: none; margin: 38px auto 0; text-align: center; min-height: 28px; }
+    #secretLinkWrap { display: none; margin: 38px auto 0; text-align: center; }
     #secretLinkWrap.visible { display: block; }
-    /* O link não é um botão: fica quase imperceptível e depende da percepção visual do jogador. */
     #secretLink {
-      color: #190000;
-      background: transparent;
+      color: #fff;
+      background: #a00000;
       display: inline-block;
-      padding: 2px;
-      border: 0;
-      border-radius: 0;
+      padding: 12px 18px;
+      border: 2px solid #fff;
+      border-radius: 8px;
       overflow-wrap: anywhere;
-      font-size: 15px;
-      text-decoration: none;
-      text-shadow: none;
+      font-size: 18px;
     }
-    #secretLink:focus-visible { outline: 1px dotted #3b0000; }
-    #musicAudio { display: none; }
+    body.high-contrast {
+      --black: #000;
+      --white: #fff;
+      --gold: #ffff00;
+      --gold-soft: #ffff00;
+      --purple: #00ffff;
+      --muted: #fff;
+      --line: #fff;
+      background: #000;
+      color: #fff;
+    }
+    body.high-contrast .intro,
+    body.high-contrast .quote,
+    body.high-contrast .red-question,
+    body.high-contrast .secret-title { color: #ffff00; }
+    body.high-contrast #secretUnlock { border: 2px solid #ffff00; }
+    body.high-contrast #secretLink { background: #ffff00; color: #000; border-color: #fff; font-weight: bold; }
+    #musicFrame { position: fixed; width: 1px; height: 1px; left: -10px; bottom: -10px; border: 0; }
 
     #status {
       min-height: 24px;
@@ -615,7 +628,7 @@
     </section>
   </main>
 
-  <audio id="musicAudio" src="assets/audio.mp4" autoplay loop preload="auto" playsinline></audio>
+  <iframe id="musicFrame" title="Música ambiente" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
   <script>
     // Cole aqui a URL da implantação do Apps Script terminada em /exec.
@@ -643,7 +656,7 @@
         element.classList.add("lit");
         if (secretProgress === secretCode.length) {
           secretUnlock.classList.add("unlocked");
-          secretLinkWrap.classList.add("visible");
+          secretUnlock.scrollIntoView({ behavior: "smooth", block: "center" });
           secretProgress = 0;
         }
       } else {
@@ -656,19 +669,24 @@
       element.addEventListener("click", () => clickSecretInitial(element));
     });
 
-    // Não há atalho nem botão de contraste. Após descobrir CINCO, o link fica
-    // discretamente no fim da página; o site não consegue detectar filtros do sistema operacional.
+    // A pista não mostra um botão: descobrir Alt+C alterna a forma de enxergar.
+    document.addEventListener("keydown", event => {
+      if (event.altKey && event.key.toLowerCase() === "c") {
+        event.preventDefault();
+        const active = document.body.classList.toggle("high-contrast");
+        if (active && secretUnlock.classList.contains("unlocked")) {
+          secretLinkWrap.classList.add("visible");
+        } else {
+          secretLinkWrap.classList.remove("visible");
+        }
+      }
+    });
 
-    // Música local em loop, sem anúncios nem controles visíveis.
-    // O arquivo de áudio deve estar em assets/audio.mp4. Alguns navegadores só
-    // permitem iniciar áudio com som depois da primeira interação do visitante.
-    const musicAudio = document.getElementById("musicAudio");
-    const tryStartMusic = () => {
-      musicAudio.play().catch(() => {});
-    };
-    document.addEventListener("pointerdown", tryStartMusic, { once: true });
-    document.addEventListener("keydown", tryStartMusic, { once: true });
-    tryStartMusic();
+    // Música ambiente automática em loop, sem controles visíveis.
+    // Navegadores podem bloquear autoplay com som até haver interação do usuário.
+    const musicFrame = document.getElementById("musicFrame");
+    const youtubeId = "m-kkRfQYofg";
+    musicFrame.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&loop=1&playlist=${youtubeId}&controls=0&playsinline=1`;
 
     function updateAttributes(changedInput = null) {
       if (changedInput) {
